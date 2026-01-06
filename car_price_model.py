@@ -32,30 +32,30 @@ df_read = pd.read_csv(os.path.join(path, "vehicles.csv"))
 
 # %%
 # trim and preprocess
-df = df_read[['price',
-                   'year',
-                   'manufacturer',
-                   'model',
-                   'condition',
-                   'fuel',
-                   'odometer',
-                   'drive',
-                   'type',
-                   'paint_color',
-                   'state',
-                   'lat',
-                   'long']].dropna()
+df = df_read[["price",
+                   "year",
+                   "manufacturer",
+                   "model",
+                   "condition",
+                   "fuel",
+                   "odometer",
+                   "drive",
+                   "type",
+                   "paint_color",
+                   "state",
+                   "lat",
+                   "long"]].dropna()
 
 # trim low price and mileage
-df = df[df['price'] >= 1000]
-df = df[df['price'] <= 40000]
+df = df[df["price"] >= 1000]
+df = df[df["price"] <= 40000]
 df = df[df["odometer"] >= 5000]
 df = df[df["odometer"] <= 300000]
 
 # replace year with age
 current_year = 2025
 df["age"] = current_year - df["year"]
-df.drop('year', axis=1, inplace=True)
+df.drop("year", axis=1, inplace=True)
 
 # split into model and trim, fill empties with unknown
 split = df["model"].str.split()
@@ -63,20 +63,20 @@ df["model"] = split.str[:2].str.join(" ")
 df["trim"] = split.str[2:].str.join(" ").replace("", "Unknown")
 
 # Define features and target
-features_X = df[['age',
-                   'manufacturer',
-                   'model',
-                   'trim',
-                   'condition',
-                   'fuel',
-                   'odometer',
-                   'drive',
-                   'type',
-                   'paint_color',
-                   'state',
-                   'lat',
-                   'long']]
-target_y = df['price']
+features_X = df[["age",
+                   "manufacturer",
+                   "model",
+                   "trim",
+                   "condition",
+                   "fuel",
+                   "odometer",
+                   "drive",
+                   "type",
+                   "paint_color",
+                   "state",
+                   "lat",
+                   "long"]]
+target_y = df["price"]
 # print(features_X.columns)
 # print(df_read.columns)
 
@@ -96,23 +96,23 @@ num_cols = X_train.select_dtypes(exclude="object").columns.tolist()
 # one-hot encode the categorical columns
 preprocessor = ColumnTransformer(
     transformers=[
-        ('cat', OneHotEncoder(handle_unknown='ignore'), cat_cols),
-        ('numeric','passthrough', num_cols)
+        ("cat", OneHotEncoder(handle_unknown="ignore"), cat_cols),
+        ("numeric","passthrough", num_cols)
     ]
 )
 
 # %%
 # # build pipeline with the linear regression model
 # model = Pipeline(steps=[
-#     ('preprocess', preprocessor),
-#     ('regressor', LinearRegression())
+#     ("preprocess", preprocessor),
+#     ("regressor", LinearRegression())
 # ])
 
 # %%
 # build pipeline with the random forest model
 model = Pipeline(steps=[
-    ('preprocess', preprocessor),
-    ('regressor', RandomForestRegressor(
+    ("preprocess", preprocessor),
+    ("regressor", RandomForestRegressor(
         n_estimators=100,
         max_depth=20,
         random_state=42,
@@ -144,76 +144,6 @@ comparison["error"] = comparison["predicted_price"] - comparison["true_price"]
 comparison["absolute % error"] = abs(comparison["error"] / comparison["true_price"] * 100)
 
 print(comparison.describe())
-
-# %%
-my_car = pd.DataFrame([{
-    'age': 20.0,
-                   'manufacturer': 'jeep',
-                   'model': 'grand cherokee',
-                   'trim': 'laredo',
-                   'condition': 'good',
-                   'fuel': 'gas',
-                   'odometer': 170000,
-                   'drive': '4wd',
-                   'type': 'SUV',
-                   'paint_color': 'red',
-                   'state': 'ct'
-}])
-
-norah_car = pd.DataFrame([{
-    'age': 13.0,
-                   'manufacturer': 'honda',
-                   'model': 'crv',
-                   'trim': "",
-                   'condition': 'fair',
-                   'fuel': 'gas',
-                   'odometer': 264000,
-                   'drive': 'fwd',
-                   'type': 'SUV',
-                   'paint_color': 'white',
-                   'state': 'tx'
-}])
-
-jodi = pd.DataFrame([{
-    'age': 4.0,
-                   'manufacturer': 'hyundai',
-                   'model': 'palisade',
-                   'trim': 'calligraphy',
-                   'condition': 'excellent',
-                   'fuel': 'gas',
-                   'odometer': 70000,
-                   'drive': '4wd',
-                   'type': 'SUV',
-                   'paint_color': 'black',
-                   'state': 'ct',
-                   'lat': 41,
-                   'long': 72
-}])
-
-tesla = pd.DataFrame([{
-    'age': 3,
-                   'manufacturer': 'tesla',
-                   'model': 'model y',
-                   'trim': '',
-                   'condition': 'excellent',
-                   'fuel': 'electric',
-                   'odometer': 30000,
-                   'drive': '4wd',
-                   'type': 'SUV',
-                   'paint_color': 'red',
-                   'state': 'ct'
-}])
-
-my_car_value = np.exp(model.predict(jodi))
-
-print(f"Estimated value of car: ${my_car_value[0]:.2f}")
-
-print(f"Conditions: {df["condition"].unique()}")
-print(f"Drives: {df["drive"].unique()}")
-print(f"States: {df["state"].unique()}")
-print(f"Colors: {df["paint_color"].unique()}")
-print(f"Types: {df["type"].unique()}")
-print(f"Fuels: {df["fuel"].unique()}")
 
 
 
