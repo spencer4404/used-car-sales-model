@@ -3,8 +3,17 @@ from pydantic import BaseModel
 import pandas as pd
 import numpy as np
 import joblib
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # allow all origins (fine for demo)
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 model = joblib.load("car_price_model.joblib")
 
 # define the features
