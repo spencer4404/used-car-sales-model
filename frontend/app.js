@@ -1,6 +1,11 @@
 const form = document.getElementById("predict-form");
 const result = document.getElementById("result");
 
+// define year values for calculating age
+const currentYear = new Date().getFullYear();
+const yearValue = Number(document.getElementById("year").value);
+const age = Math.max(0, currentYear - yearValue);
+
 // define the arrays users can select from
 const CONDS = ['Good', 'Excellent', 'New', 'Fair', 'Like new', 'Salvage']; // conditions
 const DRIVES = ['Rwd', '4wd', 'Fwd']; // rear, 4, front wheel drive
@@ -42,7 +47,7 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const payload = {
-    age: Number(document.getElementById("age").value),
+    age: age, // calculated above
     manufacturer: document.getElementById("manufacturer").value.toLowerCase(),
     model: document.getElementById("model").value.toLowerCase(),
     trim: document.getElementById("trim").value.toLowerCase(),
