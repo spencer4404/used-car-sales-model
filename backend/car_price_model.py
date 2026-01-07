@@ -28,7 +28,7 @@ path = kagglehub.dataset_download("austinreese/craigslist-carstrucks-data")
 # %%
 # read the dataframe
 df_read = pd.read_csv(os.path.join(path, "vehicles.csv"))
-print(df_read.dtypes)
+# print(df_read.dtypes)
 
 # %%
 # trim and preprocess
@@ -81,9 +81,6 @@ features_X = df[['age',
                    'lat',
                    'long']]
 target_y = df['price']
-print(df.dtypes)
-print(features_X.columns)
-print(df_read.columns)
 
 # %% [markdown]
 # print(df.dtypes)
@@ -138,7 +135,6 @@ y_pred = np.exp(y_pred_log)
 mae = mean_absolute_error(y_test, y_pred)
 print("\nMAE: ", mae)
 # current MAE: 2183
-print(sklearn.__version__)
 
 # %%
 # Compare error
@@ -151,4 +147,4 @@ comparison["absolute % error"] = abs(comparison["error"] / comparison["true_pric
 print(comparison.describe())
 
 # dump to joblib
-joblib.dump(model, "car_price_model.joblib")
+joblib.dump(model, "backend/car_price_model.joblib")
