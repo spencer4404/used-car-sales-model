@@ -4,6 +4,12 @@
   <title>Spencer's Car Price Estimator</title>
 </head>
 
+<style>
+  body {
+    text-align: center;
+  }
+</style>
+
 <body>
   <h1>Welcome to Spencer's <i>Used Car Price Estimator!</i></h1>
 
@@ -18,7 +24,34 @@
     <input type="text" id="manufacturer" required><br>
 
     <label>Model:</label>
-    <input type="text" id="model" required><br><br>
+    <input type="text" id="model" required><br>
+
+    <label>Trim (leave blank if unknown):</label>
+    <input type="text" id="model" required><br>
+
+    <label>Condition:</label>
+    <select type='text' id="condition"></select>
+    <br>
+
+    <label>Drive:</label>
+    <select type='text' id="drive"></select>
+    <br>
+
+    <label>State:</label>
+    <select type='text' id="state"></select>
+    <br>
+
+    <label>Color:</label>
+    <select type='text' id="color"></select>
+    <br>
+
+    <label>Vehicle Type:</label>
+    <select type='text' id="type"></select>
+    <br>
+
+    <label>Fuel Type:</label>
+    <select type='text' id="fuel"></select>
+    <br>
 
     <button type="submit">Predict Price</button>
   </form>

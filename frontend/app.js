@@ -2,7 +2,7 @@ const form = document.getElementById("predict-form");
 const result = document.getElementById("result");
 
 // define the arrays users can select from
-const CONDS = ['Excellent', 'Good', 'New', 'Fair', 'Like new', 'Salvage']; // conditions
+const CONDS = ['Good', 'Excellent', 'New', 'Fair', 'Like new', 'Salvage']; // conditions
 const DRIVES = ['Rwd', '4wd', 'Fwd']; // rear, 4, front wheel drive
 const STATES = [
     'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 
@@ -15,21 +15,44 @@ const COLORS = ['Black', 'Silver', 'Grey', 'Red', 'Blue', 'White', 'Brown', 'Yel
 const TYPE = ['Sedan', 'Coupe', 'Suv', 'Truck', 'Pickup', 'Other', 'Hatchback', 'Mini-van', 'Offroad', 'Convertible', 'Wagon', 'Van', 'Bus']
 const FUEL = ['Gas', 'Hybrid', 'Electric', 'Diesel', 'Other']
 
+// populate each dropdown
+const DROPDOWNS = {
+    condition: CONDS,
+    drive: DRIVES,
+    state: STATES,
+    color: COLORS,
+    type: TYPE,
+    fuel: FUEL
+};
+
+Object.entries(DROPDOWNS).forEach(([id,values]) => {
+    // select each id
+    const select = document.getElementById(id);
+    // get each of the values
+    values.forEach(v =>{
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = v;
+        select.appendChild(opt);
+    })
+})
+
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const payload = {
     age: Number(document.getElementById("age").value),
-    manufacturer: document.getElementById("manufacturer").value,
-    model: document.getElementById("model").value,
-    trim: "",
-    condition: "good",
-    fuel: "gas",
+    manufacturer: document.getElementById("manufacturer").value.toLowercase(),
+    model: document.getElementById("model").value.toLowercase(),
+    trim: document.getElementById("trim").value.toLowerCase(),
+    condition: document.getElementById("condition").value.toLowerCase(),
+    fuel: document.getElementById("fuel").value.toLowerCase(),
     odometer: Number(document.getElementById("odometer").value),
-    drive: "4wd",
-    type: "suv",
-    paint_color: "black",
-    state: "ma",
+    drive: document.getElementById("drive").value.toLowerCase(),
+    type: document.getElementById("type").value.toLowerCase(),
+    paint_color: document.getElementById("color").value.toLowerCase(),
+    state: document.getElementById("state").value.toLowerCase(),
     lat: 42.0,
     long: -71.0
   };
