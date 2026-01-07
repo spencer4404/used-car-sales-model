@@ -57,12 +57,17 @@ form.addEventListener("submit", async (e) => {
     long: -71.0
   };
 
+  // Show loading state
+  result.textContent = "Thinking...";
+  result.classList.add("loading");
+
   const res = await fetch("https://car-price-model.fly.dev/predict", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
 
+  result.classList.remove("loading");
   const data = await res.json();
   result.textContent = `Estimated Price: $${data.predicted_price.toFixed(0)}`;
 });
