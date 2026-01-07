@@ -1,10 +1,8 @@
 const form = document.getElementById("predict-form");
 const result = document.getElementById("result");
 
-// define year values for calculating age
+// define current year
 const currentYear = new Date().getFullYear();
-const yearValue = Number(document.getElementById("year").value);
-const age = Math.max(0, currentYear - yearValue);
 
 // define the arrays users can select from
 const CONDS = ['Good', 'Excellent', 'New', 'Fair', 'Like new', 'Salvage']; // conditions
@@ -45,6 +43,10 @@ Object.entries(DROPDOWNS).forEach(([id,values]) => {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  // calculate age
+  const yearValue = Number(document.getElementById("year").value);
+  const age = Math.max(0, currentYear - yearValue);
 
   const payload = {
     age: age, // calculated above
