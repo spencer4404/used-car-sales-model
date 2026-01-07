@@ -90,5 +90,6 @@ button:hover {
 
 #result {
   margin-top: 18px;
-  font-size: 18px;
+  font-size: 38px;
+  text-align: center;
 }
