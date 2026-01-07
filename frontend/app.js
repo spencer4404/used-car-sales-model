@@ -1,6 +1,20 @@
 const form = document.getElementById("predict-form");
 const result = document.getElementById("result");
 
+// define the arrays users can select from
+const CONDS = ['Excellent', 'Good', 'New', 'Fair', 'Like new', 'Salvage']; // conditions
+const DRIVES = ['Rwd', '4wd', 'Fwd']; // rear, 4, front wheel drive
+const STATES = [
+    'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 
+    'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 
+    'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NC', 'NE', 'NV', 
+    'NJ', 'NM', 'NY', 'NH', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 
+    'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
+    ];
+const COLORS = ['Black', 'Silver', 'Grey', 'Red', 'Blue', 'White', 'Brown', 'Yellow', 'Green', 'Orange', 'Purple', 'Custom',]
+const TYPE = ['Sedan', 'Coupe', 'Suv', 'Truck', 'Pickup', 'Other', 'Hatchback', 'Mini-van', 'Offroad', 'Convertible', 'Wagon', 'Van', 'Bus']
+const FUEL = ['Gas', 'Hybrid', 'Electric', 'Diesel', 'Other']
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
