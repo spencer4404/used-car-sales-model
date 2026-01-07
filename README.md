@@ -24,4 +24,4 @@ Frontend: Web UI (index.html, app.js, styles.css)
 
 The trained model file (`car_price_model.joblib`) is kept locally and not committed.
 
-This project was built as a learning + portfolio project to practice ML modeling, API deployment, Docker, and frontend integration. This repo also includes a jupytr notebook with a model built around synthetic data.
+This project was built as a learning + portfolio project to practice ML modeling, API deployment, Docker, and frontend integration. This repo also includes a jupyter notebook with a model built around synthetic data.
