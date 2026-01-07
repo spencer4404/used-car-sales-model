@@ -43,8 +43,8 @@ form.addEventListener("submit", async (e) => {
 
   const payload = {
     age: Number(document.getElementById("age").value),
-    manufacturer: document.getElementById("manufacturer").value.toLowercase(),
-    model: document.getElementById("model").value.toLowercase(),
+    manufacturer: document.getElementById("manufacturer").value.toLowerCase(),
+    model: document.getElementById("model").value.toLowerCase(),
     trim: document.getElementById("trim").value.toLowerCase(),
     condition: document.getElementById("condition").value.toLowerCase(),
     fuel: document.getElementById("fuel").value.toLowerCase(),
