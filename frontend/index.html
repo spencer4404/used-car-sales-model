@@ -1,63 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" href="style.css">
   <title>Spencer's Car Price Estimator</title>
 </head>
 
-<style>
-  body {
-    text-align: center;
-  }
-</style>
-
 <body>
-  <h1>Welcome to Spencer's <i>Used Car Price Estimator!</i></h1>
+  <div class="container">
+    <h1>Welcome to Spencer's Used Car Price Estimator!</h1>
+    <p class="subtitle">Enter your vehicle details to estimate market price</p>
 
-  <form id="predict-form">
-    <label>Age (years):</label>
-    <input type="number" id="age" required><br>
+    <form id="predict-form">
+      <label>Age (years):</label>
+      <input type="number" id="age" required>
 
-    <label>Odometer (miles):</label>
-    <input type="number" id="odometer" required><br>
+      <label>Odometer (miles):</label>
+      <input type="number" id="odometer" required>
 
-    <label>Manufacturer:</label>
-    <input type="text" id="manufacturer" required><br>
+      <label>Manufacturer:</label>
+      <input type="text" id="manufacturer" required>
 
-    <label>Model:</label>
-    <input type="text" id="model" required><br>
+      <label>Model:</label>
+      <input type="text" id="model" required>
 
-    <label>Trim (leave blank if unknown):</label>
-    <input type="text" id="trim"><br>
+      <label>Trim (leave blank if unknown):</label>
+      <input type="text" id="trim">
 
-    <label>Condition:</label>
-    <select type='text' id="condition"></select>
-    <br>
+      <label>Condition:</label>
+      <select type='text' id="condition"></select>
+      
+      <label>Drive:</label>
+      <select type='text' id="drive"></select>
+      
+      <label>State:</label>
+      <select type='text' id="state"></select>
+      
+      <label>Color:</label>
+      <select type='text' id="color"></select>
+      
+      <label>Vehicle Type:</label>
+      <select type='text' id="type"></select>
+      
+      <label>Fuel Type:</label>
+      <select type='text' id="fuel"></select>
+      
+      <button type="submit" class="full">Predict Price</button>
+    </form>
 
-    <label>Drive:</label>
-    <select type='text' id="drive"></select>
-    <br>
-
-    <label>State:</label>
-    <select type='text' id="state"></select>
-    <br>
-
-    <label>Color:</label>
-    <select type='text' id="color"></select>
-    <br>
-
-    <label>Vehicle Type:</label>
-    <select type='text' id="type"></select>
-    <br>
-
-    <label>Fuel Type:</label>
-    <select type='text' id="fuel"></select>
-    <br>
-
-    <button type="submit">Predict Price</button>
-  </form>
-
-  <h2 id="result"></h2>
-
+    <h2 id="result"></h2>
+  </div>
+  
   <script src="app.js"></script>
 </body>
 </html>
