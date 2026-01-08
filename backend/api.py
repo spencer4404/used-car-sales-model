@@ -3,6 +3,8 @@ from pydantic import BaseModel
 import pandas as pd
 import numpy as np
 import joblib
+import os
+import psycopg2
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -13,6 +15,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# connect to database
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL is None:
+    raise RuntimeError("DATABASE_URL is not set!")
+else:
+    print(DATABASE_URL)
+
+conn = psycopg2.connect(DATABASE_URL)
+conn.autocommit = True
+print("Connected to Postgres")
 
 model = joblib.load("car_price_model.joblib")
 
