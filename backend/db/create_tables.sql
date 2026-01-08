@@ -1,7 +1,7 @@
 CREATE TABLE user_input_data (
     id SERIAL PRIMARY KEY,
 
-    year INT,
+    age INT,
     manufacturer TEXT,
     model TEXT,
     trim TEXT,
