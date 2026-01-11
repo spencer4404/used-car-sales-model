@@ -18,14 +18,19 @@ import joblib
 # Download latest version
 path = kagglehub.dataset_download("austinreese/craigslist-carstrucks-data")
 
+# print("Path to dataset files:", path)
+# print(os.listdir(path))
+
+# df = pd.read_csv(os.path.join(path, "vehicles.csv"))
+
+# display(df.head(5))
+
 # %%
 # read the dataframe
 df_read = pd.read_csv(os.path.join(path, "vehicles.csv"))
+# print(df_read.dtypes)
 
 # %%
-
-print(df_read.columns)
-
 # trim and preprocess
 df = df_read[['price',
                    'year',
@@ -43,7 +48,7 @@ df = df_read[['price',
 
 # trim low price and mileage
 df = df[df['price'] >= 1000]
-df = df[df['price'] <= 100000]
+df = df[df['price'] <= 40000]
 df = df[df["odometer"] >= 5000]
 df = df[df["odometer"] <= 300000]
 
@@ -129,7 +134,7 @@ y_pred_log = model.predict(X_test)
 y_pred = np.exp(y_pred_log)
 mae = mean_absolute_error(y_test, y_pred)
 print("\nMAE: ", mae)
-# current MAE: 2505
+# current MAE: 2183
 
 # %%
 # Compare error
@@ -142,4 +147,4 @@ comparison["absolute % error"] = abs(comparison["error"] / comparison["true_pric
 print(comparison.describe())
 
 # dump to joblib
-joblib.dump(model, "backend/car_price_model.joblib")
+joblib.dump(model, "backend/modelv1.joblib")
