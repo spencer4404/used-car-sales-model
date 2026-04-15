@@ -1,5 +1,26 @@
 const form = document.getElementById("predict-form");
 const result = document.getElementById("result");
+const submitBtn = form.querySelector('button[type="submit"]');
+
+let isSubmitting = false;
+let thinkingTimer;
+
+function startThinkingAnimation() {
+  let dots = 1;
+  result.textContent = "Thinking.";
+  result.classList.add("loading");
+
+  thinkingTimer = setInterval(() => {
+    dots = (dots % 3) + 1;
+    result.textContent = `Thinking${".".repeat(dots)}`;
+  }, 450);
+}
+
+function stopThinkingAnimation() {
+  clearInterval(thinkingTimer);
+  thinkingTimer = undefined;
+  result.classList.remove("loading");
+}
 
 // define current year
 const currentYear = new Date().getFullYear();
@@ -44,6 +65,13 @@ Object.entries(DROPDOWNS).forEach(([id,values]) => {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  if (isSubmitting) {
+    return;
+  }
+
+  isSubmitting = true;
+  submitBtn.disabled = true;
+
   // calculate age
   const yearValue = Number(document.getElementById("year").value);
   const age = Math.max(0, currentYear - yearValue);
@@ -64,17 +92,22 @@ form.addEventListener("submit", async (e) => {
     long: -71.0
   };
 
-  // Show loading state
-  result.textContent = "Thinking...";
-  result.classList.add("loading");
+  startThinkingAnimation();
 
-  const res = await fetch("https://car-price-model.fly.dev/predict", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
+  try {
+    const res = await fetch("https://car-price-model.fly.dev/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
-  result.classList.remove("loading");
-  const data = await res.json();
-  result.textContent = `Estimated Price: $${data.predicted_price.toFixed(0)}`;
+    const data = await res.json();
+    result.textContent = `Estimated Price: $${data.predicted_price.toFixed(0)}`;
+  } catch (error) {
+    result.textContent = "Something went wrong. Please try again.";
+  } finally {
+    stopThinkingAnimation();
+    isSubmitting = false;
+    submitBtn.disabled = false;
+  }
 });
