@@ -211,3 +211,5 @@ __marimo__/
 
 *.csv
 *.joblib
+
+node_modules/

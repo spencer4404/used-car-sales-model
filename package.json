@@ -1,0 +1,13 @@
+{
+  "name": "used-car-value-model",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Local dev server for the used car estimator frontend",
+  "scripts": {
+    "dev": "live-server frontend --watch=frontend --port=5173 --open=/",
+    "dev:docs": "live-server docs --watch=docs --port=5174 --open=/"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

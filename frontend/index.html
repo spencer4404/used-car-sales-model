@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <title>Spencer's Car Price Estimator</title>
 </head>
@@ -53,8 +54,21 @@
   
   <script src="app.js"></script>
   <script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    (function () {
+      var host = window.location.hostname;
+      var isLocal = host === "localhost" || host === "127.0.0.1";
+
+      if (isLocal) {
+        return;
+      }
+
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+
+      var insightsScript = document.createElement("script");
+      insightsScript.defer = true;
+      insightsScript.src = "/_vercel/insights/script.js";
+      document.body.appendChild(insightsScript);
+    })();
   </script>
-  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
