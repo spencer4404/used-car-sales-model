@@ -5,10 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Redirecting...</title>
   <meta http-equiv="refresh" content="0;url=https://spencersguestimator.vercel.app/">
+  <script>
+    (function () {
+      var target = "https://spencersguestimator.vercel.app/";
+      try {
+        if (window.top && window.top !== window) {
+          window.top.location.href = target;
+          return;
+        }
+      } catch (e) {
+        // Ignore cross-origin top access errors and fall back.
+      }
+      window.location.replace(target);
+    })();
+  </script>
 </head>
 <body>
   <p>Redirecting to the new site...</p>
-  <p><a href="https://spencersguestimator.vercel.app/">Continue to the app</a></p>
+  <p><a href="https://spencersguestimator.vercel.app/" target="_top" rel="noopener noreferrer">Continue to the app</a></p>
   <script>
     window.location.replace("https://spencersguestimator.vercel.app/");
   </script>
