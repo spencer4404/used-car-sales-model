@@ -78,7 +78,7 @@ features_X = df[['age',
 target_y = df['price']
 
 # %% [markdown]
-# print(df.dtypes)
+# print(len(df))
 
 # %%
 #split into train and test
