@@ -21,30 +21,13 @@ app.add_middleware(
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if DATABASE_URL is None:
     raise RuntimeError("DATABASE_URL is not set!")
-else:
-    print(DATABASE_URL)
 conn = psycopg2.connect(DATABASE_URL)
 conn.autocommit = True
 
 # load the model
 model = joblib.load("car_price_model.joblib")
 
-# define the features
-FEATURES = [
-    'age',
-    'manufacturer',
-    'model',
-    'trim',
-    'condition',
-    'fuel',
-    'odometer',
-    'drive',
-    'type',
-    'paint_color',
-    'state',
-    'lat',
-    'long'
-]
+SMEAR = 1.0129192399257083
 
 # define object for prediction
 class CarInput(BaseModel):
@@ -66,11 +49,25 @@ class CarInput(BaseModel):
 @app.post("/predict")
 def predict(car: CarInput):
     # create row from the user input data
-    row = pd.DataFrame([{k: getattr(car, k) for k in FEATURES}])
+    row = pd.DataFrame([{
+        'age': car.age,
+        'manufacturer': car.manufacturer.lower(),
+        'model': car.model.lower(),
+        'trim': car.trim.lower() if car.trim else 'unknown',
+        'condition': car.condition.lower(),
+        'fuel': car.fuel.lower(),
+        'odometer': car.odometer,
+        'drive': car.drive.lower(),
+        'type': car.type.lower(),
+        'paint_color': car.paint_color.lower(),
+        'price_channel': 'retail_asking',
+        'source_dataset': 'us_sales_2023',
+        'specs_imputed': False,
+    }])
 
     # predict and exponentiate the logged value
     pred_log = model.predict(row)
-    pred = float(np.exp(pred_log)[0])
+    pred = float(np.exp(pred_log)[0] * SMEAR)
 
     # log data into db
     with conn.cursor() as cur:
@@ -111,7 +108,7 @@ def predict(car: CarInput):
             """, (
                 input_id,
                 pred,
-                "random_forest_v1"
+                "random_forest_v2"
             ))
 
     return {"predicted_price": pred}

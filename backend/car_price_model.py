@@ -137,6 +137,7 @@ y_pred_log = model.predict(X_test)
 # smearing correction: compute on TRAIN predictions (no leakage)
 train_pred_log = model.predict(X_train)
 smear = np.exp(y_train_log - train_pred_log).mean()
+print(f"Smear: {smear}")
 
 y_pred = np.exp(y_pred_log) * smear
 mae = mean_absolute_error(y_test, y_pred)
