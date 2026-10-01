@@ -25,7 +25,7 @@ conn = psycopg2.connect(DATABASE_URL)
 conn.autocommit = True
 
 # load the model
-model = joblib.load("car_price_model.joblib")
+model = joblib.load("modelv1.joblib")
 
 SMEAR = 1.0129192399257083
 

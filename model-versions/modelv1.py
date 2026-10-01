@@ -147,4 +147,4 @@ comparison["absolute % error"] = abs(comparison["error"] / comparison["true_pric
 print(comparison.describe())
 
 # dump to joblib
-joblib.dump(model, "backend/modelv1.joblib")
+joblib.dump(model, "../backend/modelv1.joblib")
