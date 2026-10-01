@@ -36,7 +36,7 @@ const STATES = [
     'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
     ];
 const COLORS = ['Black', 'Silver', 'Grey', 'Red', 'Blue', 'White', 'Brown', 'Yellow', 'Green', 'Orange', 'Purple', 'Custom',]
-const TYPE = ['Sedan', 'Coupe', 'Suv', 'Truck', 'Pickup', 'Other', 'Hatchback', 'Mini-van', 'Offroad', 'Convertible', 'Wagon', 'Van', 'Bus']
+const TYPE = ['Sedan', 'Coupe', 'Suv', 'Pickup', 'Other', 'Hatchback', 'Mini-van', 'Offroad', 'Convertible', 'Wagon', 'Van', 'Bus']
 const FUEL = ['Gas', 'Hybrid', 'Electric', 'Diesel', 'Other']
 
 // populate each dropdown
