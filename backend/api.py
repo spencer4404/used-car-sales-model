@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import pandas as pd
 import numpy as np
@@ -48,67 +48,88 @@ class CarInput(BaseModel):
 # prediction function
 @app.post("/predict")
 def predict(car: CarInput):
-    # create row from the user input data
-    row = pd.DataFrame([{
-        'age': car.age,
-        'manufacturer': car.manufacturer.lower(),
-        'model': car.model.lower(),
-        'trim': car.trim.lower() if car.trim else 'unknown',
-        'condition': car.condition.lower(),
-        'fuel': car.fuel.lower(),
-        'odometer': car.odometer,
-        'drive': car.drive.lower(),
-        'type': car.type.lower(),
-        'paint_color': car.paint_color.lower(),
-        'price_channel': 'retail_asking',
-        'source_dataset': 'us_sales_2023',
-        'specs_imputed': False,
-    }])
+    # Row must match modelv1.joblib's expected columns exactly:
+    # cat: manufacturer, model, trim, condition, fuel, drive, type,
+    #      paint_color, state; numeric: age, odometer, lat, long.
+    # (Extra columns are dropped, but missing ones raise ValueError.)
+    trim = (car.trim or "").strip().lower() or "unknown"
+    try:
+        row = pd.DataFrame([{
+            'age': car.age,
+            'manufacturer': car.manufacturer.lower(),
+            'model': car.model.lower(),
+            'trim': trim,
+            'condition': car.condition.lower(),
+            'fuel': car.fuel.lower(),
+            'odometer': car.odometer,
+            'drive': car.drive.lower(),
+            'type': car.type.lower(),
+            'paint_color': car.paint_color.lower(),
+            'state': car.state.lower(),
+            'lat': car.lat,
+            'long': car.long,
+        }])
 
-    # predict and exponentiate the logged value
-    pred_log = model.predict(row)
+        # predict and exponentiate the logged value
+        pred_log = model.predict(row)
+    except HTTPException:
+        raise
+    except Exception as e:
+        # Convert to HTTPException so CORSMiddleware still attaches
+        # CORS headers (unhandled 500s surface in browsers as CORS errors).
+        raise HTTPException(status_code=500, detail=f"prediction failed: {e}")
     pred = float(np.exp(pred_log)[0] * SMEAR)
 
     # log data into db
-    with conn.cursor() as cur:
-        # insert user input
-        cur.execute(
-            """
-            INSERT INTO user_input_data(
-                age, manufacturer, model, trim, condition, fuel,
-                odometer, drive, vehicle_type, color, state, lat, long
+    try:
+        with conn.cursor() as cur:
+            # insert user input
+            cur.execute(
+                """
+                INSERT INTO user_input_data(
+                    age, manufacturer, model, trim, condition, fuel,
+                    odometer, drive, vehicle_type, color, state, lat, long
+                )
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                RETURNING id;
+                """, (
+                    car.age,
+                    car.manufacturer,
+                    car.model,
+                    car.trim,
+                    car.condition,
+                    car.fuel,
+                    car.odometer,
+                    car.drive,
+                    car.type,
+                    car.paint_color,
+                    car.state,
+                    car.lat,
+                    car.long
+                )
             )
-            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            RETURNING id;
-            """, (
-                car.age,
-                car.manufacturer,
-                car.model,
-                car.trim,
-                car.condition,
-                car.fuel,
-                car.odometer,
-                car.drive,
-                car.type,
-                car.paint_color,
-                car.state,
-                car.lat,
-                car.long
-            )
-        )
 
-        # get the input ID 
-        input_id = cur.fetchone()[0]
+            # get the input ID
+            input_id = cur.fetchone()[0]
 
-        # insert the prediction
-        cur.execute("""
-                INSERT INTO predictions (
-                    input_id, predicted_price, model_version)
-                    VALUES (%s,%s,%s);
-            """, (
-                input_id,
-                pred,
-                "random_forest_v2"
-            ))
+            # insert the prediction
+            cur.execute("""
+                    INSERT INTO predictions (
+                        input_id, predicted_price, model_version)
+                        VALUES (%s,%s,%s);
+                """, (
+                    input_id,
+                    pred,
+                    "random_forest_v1"
+                ))
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"db logging failed: {e}")
 
     return {"predicted_price": pred}
+
+
+@app.get("/health")
+def health():
+    return {"ok": True}
